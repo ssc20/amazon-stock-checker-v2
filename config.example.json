@@ -1,0 +1,30 @@
+{
+    "telegram_bot_token": "YOUR_BOT_TOKEN_HERE",
+    "telegram_chat_id": "YOUR_CHAT_ID_HERE",
+
+    "discord_webhook_url": "",
+
+    "amazon_domain": "amazon.ca",
+
+    "poll_high_priority_min_seconds": 25,
+    "poll_high_priority_max_seconds": 35,
+    "poll_interval_min_seconds": 45,
+    "poll_interval_max_seconds": 60,
+
+    "warmup_every_n_cycles": 20,
+
+    "proxy_url": null,
+
+    "products": [
+        {
+            "asin": "B0DCZFNB3C",
+            "label": "PS5 Slim",
+            "priority": "high"
+        },
+        {
+            "asin": "B0D5C9HLKZ",
+            "label": "Some Other Product",
+            "priority": "normal"
+        }
+    ]
+}

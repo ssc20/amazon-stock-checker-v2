@@ -1,0 +1,8 @@
+services:
+  stock-checker:
+    build: .
+    container_name: amazon-stock-checker
+    restart: unless-stopped
+    shm_size: "512mb"
+    volumes:
+      - ./config:/config
