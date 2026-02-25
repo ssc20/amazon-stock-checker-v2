@@ -44,11 +44,11 @@ def capture(page: Page, asin: str, error_msg: str, debug_dir: Path):
         page.screenshot(path=str(screenshot_path), full_page=False)
         log.info("Debug screenshot saved: %s", screenshot_path)
 
-        # Page HTML (capped at 200KB)
+        # Full page HTML
         html_path = debug_dir / f"{prefix}.html"
         html_content = page.content()
         with open(html_path, "w", encoding="utf-8") as f:
-            f.write(html_content[:200_000])
+            f.write(html_content)
         log.info("Debug HTML saved: %s", html_path)
 
         # Log context for quick triage

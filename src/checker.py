@@ -74,8 +74,12 @@ def check_product(
             capture_debug(page, product.asin, result.error, debug_dir)
             return result
 
-        # Wait for dynamic content
-        time.sleep(random.uniform(1.0, 2.0))
+        # Wait for the product content block to render
+        try:
+            page.wait_for_selector("#productTitle", timeout=15000)
+        except Exception:
+            pass  # Continue — page may still be parseable (e.g. CAPTCHA page)
+        time.sleep(random.uniform(0.5, 1.0))
 
         # --- CAPTCHA interception ---
         if _handle_captcha(page, url, product.asin, result, debug_dir):
