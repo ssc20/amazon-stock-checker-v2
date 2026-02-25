@@ -5,4 +5,4 @@ services:
     restart: unless-stopped
     shm_size: "512mb"
     volumes:
-      - ./config:/config
+      - /mnt/user/appdata/amazon-stock-checker/config:/config
