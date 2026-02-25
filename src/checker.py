@@ -201,6 +201,10 @@ def _detect_stock(page: Page) -> bool | None:
     if add_to_cart or buy_now:
         return True
 
+    # "Unqualified buy box" means no seller won the Buy Box — treat as out of stock
+    if page.query_selector("#unqualifiedBuyBox"):
+        return False
+
     # Fallback: check the #availability section
     try:
         availability_el = page.query_selector("#availability")
