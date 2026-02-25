@@ -27,6 +27,7 @@ OUT_OF_STOCK_SIGNALS = [
     "out of stock",
     "sign up for restock",
     "we don't know when or if this item will be back in stock",
+    "no featured offers available",
 ]
 
 # Substrings that identify Amazon itself as the seller (case-insensitive match)
