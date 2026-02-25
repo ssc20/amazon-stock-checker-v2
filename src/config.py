@@ -82,6 +82,9 @@ class Config:
     # Proxy
     proxy_url: Optional[str] = None  # TODO: proxy rotation support
 
+    # Seller filtering
+    require_amazon_seller: bool = True  # Only alert when Amazon is the direct seller
+
     @classmethod
     def from_file(cls, path: Path = CONFIG_PATH) -> Config:
         """Load config from JSON file, validate, and return typed Config."""
@@ -113,6 +116,7 @@ class Config:
             warmup_every_n_cycles=raw.get("warmup_every_n_cycles", 20),
             products=products,
             proxy_url=raw.get("proxy_url"),
+            require_amazon_seller=raw.get("require_amazon_seller", True),
         )
 
     @property

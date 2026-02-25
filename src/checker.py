@@ -29,6 +29,12 @@ OUT_OF_STOCK_SIGNALS = [
     "we don't know when or if this item will be back in stock",
 ]
 
+# Substrings that identify Amazon itself as the seller (case-insensitive match)
+AMAZON_SOLD_BY_PATTERNS = [
+    "sold by amazon",
+    "ships from and sold by amazon",
+]
+
 # TODO: Add retailer-specific parsers (BestBuy, Walmart, etc.)
 #       Could subclass or use a strategy pattern:
 #
@@ -79,6 +85,7 @@ def check_product(
         # --- Parse product page ---
         result.title = _extract_title(page)
         result.price = _extract_price(page)
+        result.sold_by = _extract_sold_by(page)
         result.in_stock = _detect_stock(page)
 
         if result.in_stock is None:
@@ -148,6 +155,26 @@ def _extract_price(page: Page) -> str | None:
             fraction = page.query_selector("span.a-price-fraction")
             frac_str = fraction.inner_text().strip() if fraction else ""
             return f"${whole.inner_text().strip()}{frac_str}"
+    except Exception:
+        pass
+    return None
+
+
+def _extract_sold_by(page: Page) -> str | None:
+    """
+    Extract seller/fulfillment text from the buy box.
+
+    Tries the classic #merchant-info element first, then falls back to the
+    newer tabular buy box container. Returns raw text (e.g. "Sold by Amazon.ca
+    and Ships from Amazon") or None if neither element is found.
+    """
+    try:
+        el = page.query_selector("#merchant-info")
+        if el:
+            return el.inner_text().strip()
+        el = page.query_selector("#tabular-buybox-container")
+        if el:
+            return el.inner_text().strip()
     except Exception:
         pass
     return None

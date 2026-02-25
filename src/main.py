@@ -14,7 +14,7 @@ import sys
 import time
 
 from src.browser import BrowserManager
-from src.checker import check_product
+from src.checker import AMAZON_SOLD_BY_PATTERNS, check_product
 from src.config import Config, DEBUG_DIR, COOKIES_PATH, STATE_PATH
 from src.notifiers import build_notifiers, notify_all
 from src.state import CookieManager, StateManager
@@ -124,6 +124,26 @@ def main():
 
                 else:
                     # --- Success path ---
+                    if result.in_stock and config.require_amazon_seller:
+                        sold_by_text = (result.sold_by or "").lower()
+                        # sold_by_text empty means selector wasn't found — allow alert
+                        # rather than silently dropping a potential real restock
+                        is_amazon = not sold_by_text or any(
+                            p in sold_by_text for p in AMAZON_SOLD_BY_PATTERNS
+                        )
+                        if not is_amazon:
+                            log.info(
+                                "[%s] %s — skipping alert: sold by third party (%s)",
+                                product.asin, product.label,
+                                result.sold_by or "unknown seller",
+                            )
+                            # Record as out-of-stock so a future Amazon listing
+                            # triggers the out→in transition alert
+                            state.record_success(product.asin, False, product.priority)
+                            BrowserManager.human_jitter(browser.page)
+                            time.sleep(random.uniform(2, 6))
+                            continue
+
                     state.record_success(
                         product.asin, result.in_stock, product.priority,
                     )

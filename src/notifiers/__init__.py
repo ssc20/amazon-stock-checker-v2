@@ -32,6 +32,7 @@ class CheckResult:
         title: str | None = None,
         price: str | None = None,
         error: str | None = None,
+        sold_by: str | None = None,
     ):
         self.asin = asin
         self.url = url
@@ -39,6 +40,7 @@ class CheckResult:
         self.title = title
         self.price = price
         self.error = error
+        self.sold_by = sold_by
 
     @property
     def ok(self) -> bool:
